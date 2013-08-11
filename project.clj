@@ -8,6 +8,6 @@
                  [http-kit "2.0.0"]
                  [lamina "0.5.0-rc3"]
                  [org.clojure/data.json "0.2.2"]]
-  :source-paths ["src" "src/cmdsync/handler" "src/channel/"]
+  :source-paths ["src" "src/cmdsync/" "src/channel/" "src/util/"]
   :main cmdsync.handler
   :profiles {:dev {:dependencies [[ring-mock "0.1.5"]]}})

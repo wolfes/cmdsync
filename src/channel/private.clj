@@ -6,7 +6,6 @@
 ; Enforces one client per unique channel name.
 
 ; Map private-channel-name to private channel info.
-; Change to use a ref instead of an atom.
 (def ^:private private-channels (atom {}))
 
 (defn private-channel-with-name? [channel-name]
@@ -15,7 +14,6 @@
 
 (defn get-private-channel-by-name [channel-name]
   "Returns private channel for channel-name if one exists, else nil."
-  ;(-> ((keyword channel-name) @private-channels) :channel))
   (-> @private-channels ((keyword channel-name)) :channel))
 
 (defn set-private-channel-by-name [channel-name channel]

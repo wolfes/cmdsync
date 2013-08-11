@@ -59,7 +59,7 @@
                            {:command cmd
                             :command-data cmd-data
                             :channel-name channel-name})]
-    (println "API Request (cmd: " cmd ", form-params: " (:form-params req) ").")
+    (println "API Request: (cmd: " cmd ", form-params: " (:form-params req) ").")
     (channel-messenger tabspire-command)
     {:status 200 :headers {"content-type" "text/html"}
      :body tabspire-command}))

@@ -5,7 +5,7 @@
 ; Group channel bookkeeping methods.
 ; Allows multiple clients to listen to a unique channel name.
 
-; Change to use a ref instead of an atom.
+; Map group-channel-name to group channel info.
 (def ^:private group-channels (atom {}))
 
 (defn group-channel-with-name? [channel-name]
@@ -30,6 +30,8 @@
   "Adds channel as listener to the group channel with channel-name."
   (ensure-group-channel-exists channel-name)
   (when-let [group-channel (get-group-channel-by-name channel-name)]
+    ; Send data from client request's channel to group-channel to be heard by all.
+    ; Feature unimplemented on client.
     ;(on-receive req-channel (fn [data] (enqueue group-channel data)))
     (receive-all group-channel (fn [data] (send! req-channel data)))))
 
