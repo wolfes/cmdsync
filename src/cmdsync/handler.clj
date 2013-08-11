@@ -6,7 +6,13 @@
         [channel.private :only 
          [private-channel-with-name?
           get-private-channel-by-name 
-          set-private-channel-by-name]])
+          set-private-channel-by-name
+          send-msg-to-private-channel]]
+         [channel.group :only
+          [join-group-channel-by-name
+           get-group-channel-by-name
+           group-channel-with-name?
+           send-msg-to-group-channel]])
   (:require [ring.middleware.reload :as reload]
             [compojure.route :as route]
             [clojure.data.json :as json]
@@ -37,36 +43,24 @@
     (process-existing-private-channel req-channel channel-name)
     (process-new-private-channel req-channel channel-name)))
 
-;(defmethod process-websocket-request :join-group [req req-channel channel-name cmd]
-  ;"Add requestor's channel to listen to named channel group."
-  ;(println "process-websocket-request > join-group channel-name: " channel-name)
-  ;(join-group-channel-by-name channel-name req-channel))
+(defmethod process-websocket-request :join-group [req req-channel channel-name cmd]
+  "Add requestor's channel to listen to named channel group."
+  (println "process-websocket-request > join-group channel-name: " channel-name)
+  (join-group-channel-by-name channel-name req-channel))
 
-;(defn process-api-request [request channel-name cmd]
-  ;"Process http GET api requests to /chat/:room/:cmd.
-  ;For now, send empty command data, since POST requests are preferred."
-  ;(let [channel (get-private-channel-by-name channel-name)
-        ;tabspire-command (json/write-str
-                           ;{:command cmd
-                            ;:command-data {}
-                            ;:channel-name channel-name})]
-    ;(when (channel? channel)
-      ;(enqueue channel tabspire-command))
-    ;{:status 200 :headers {"content-type" "text/html"}
-     ;:body tabspire-command}))
-
-(defn process-api-request-to-channel [request target-channel]
-  "Process an API request for a target channel."
-  (let [params (:route-params request)
+(defn process-api-request-to-channel [req channel-messenger]
+  "Process an API request for a target channel.
+  Args:
+    channel-messenger: Fn that sends [data] to a channel."
+  (let [params (:route-params req)
         {:keys [channel-name cmd]} params
-        cmd-data (:form-params request)
+        cmd-data (:form-params req)
         tabspire-command (json/write-str
                            {:command cmd
                             :command-data cmd-data
                             :channel-name channel-name})]
-    (println "API Request (cmd: " cmd ", form-params: " (:form-params request) ").")
-    (when (open? target-channel)
-      (send! target-channel tabspire-command))
+    (println "API Request (cmd: " cmd ", form-params: " (:form-params req) ").")
+    (channel-messenger tabspire-command)
     {:status 200 :headers {"content-type" "text/html"}
      :body tabspire-command}))
 
@@ -76,28 +70,27 @@
   "Route POST request to Tabspire API to the appropriate handler."
   (fn [req]
     "Returns request param's channel-type if available, else :private."
-    (keyword (get (:params req) "channel-type" :private))))
+    (keyword (get (:form-params req) "channel-type" :private))))
 
 (defmethod route-tabspire-api-post :private [req]
   "Process tabspire api request for a private channel."
   (let [channel-name (-> req :route-params :channel-name)
         target-channel (get-private-channel-by-name channel-name)]
-    (println "\nTabspire API Post Cmd >> private channel: " channel-name)
-    (process-api-request-to-channel req target-channel)))
+    (process-api-request-to-channel req (partial send-msg-to-private-channel target-channel))))
 
-;(defmethod route-tabspire-api-post :group [req]
-  ;"Process tabspire api request for a group channel."
-  ;(let [channel-name (-> req :route-params :channel-name)
-        ;target-channel (get-group-channel-by-name channel-name)]
-    ;(println "\nTabspire API Post Cmd >> group channel: " channel-name)
-    ;(process-api-request-to-channel req target-channel)))
+(defmethod route-tabspire-api-post :group [req]
+  "Process tabspire api request for a group channel."
+  (let [channel-name (-> req :route-params :channel-name)
+        target-channel (get-group-channel-by-name channel-name)]
+    (println "\nTabspire API Post Cmd >> group channel: " channel-name)
+    (process-api-request-to-channel req (partial send-msg-to-group-channel target-channel))))
 
-(defn print-route-tabspire-cmd [is-websocket-request? channel-name cmd request]
+(defn print-route-tabspire-cmd [is-websocket-request? channel-name cmd req]
     (println "\nTabspire API >> Type:"
              (if is-websocket-request? "Websocket" "HTTP API")
              "-- Channel:" channel-name
              "-- Cmd:" cmd
-             "-- Remote Addr:" (:remote-addr request)))
+             "-- Remote Addr:" (:remote-addr req)))
 
 (defn route-tabspire-cmd 
   "Process websocket connection/naming."
@@ -110,31 +103,18 @@
       (print-route-tabspire-cmd (websocket? req-channel) channel-name cmd req)
       (if (websocket? req-channel)
         (process-websocket-request req req-channel channel-name cmd)))))
-        ;(enqueue req-chan (process-api-request req channel-name cmd)))))
 
-
-;(comment defn route-tabspire-cmd [req-chan request]
-  ;"Route tabspire api command from websocket or http endpoints.
-  ;req-chan: Channel for queueing responses to requestor."
-  ;(let [params (:route-params request)
-        ;{:keys [channel-name cmd]} params
-        ;is-websocket-request? (:websocket request)]
-    ;(print-route-tabspire-cmd is-websocket-request? channel-name cmd request)
-    ;(if is-websocket-request?
-      ;(process-websocket-request request channel-name cmd)
-      ;(enqueue req-chan (process-api-request request channel-name cmd)))))
-
-(def alphanum-regex #"[\:\_\-a-zA-Z0-9]+")
+(def allowed-channel-name-regex #"[\:\_\-a-zA-Z0-9]+")
 
 (defroutes app-routes
   (GET ["/"] {} "MOTD: <a href='http://www.nyan.cat/dub.php'>Nyan Cat Tabbyspire!</a>")
   (GET ["/tabspire/api/0/:channel-name/:cmd",
-        :channel-name , alphanum-regex
-        :cmd alphanum-regex] {}
+        :channel-name , allowed-channel-name-regex
+        :cmd allowed-channel-name-regex] {}
        route-tabspire-cmd)
   (POST ["/tabspire/api/0/:channel-name/:cmd"
-         :channel-name alphanum-regex
-         :cmd alphanum-regex] {}
+         :channel-name allowed-channel-name-regex
+         :cmd allowed-channel-name-regex] {}
         route-tabspire-api-post)
   (route/resources "/")
   (route/not-found "Not Found"))
