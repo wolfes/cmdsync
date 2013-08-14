@@ -1,9 +1,6 @@
 (ns cmdsync.routes
   (:use [compojure.core :only [defroutes GET POST context]]
         [compojure.handler :only [site]]
-        (ring.middleware [keyword-params :only [wrap-keyword-params]]
-                         [params :only [wrap-params]]
-                         [session :only [wrap-session]])
         [cmdsync.middleware :only [wrap-failsafe wrap-request-logging-in-dev
                                    wrap-reload-in-dev JGET JPUT JPOST JDELETE]])
   (:require [ring.middleware.reload :as reload]
