@@ -14,7 +14,7 @@
 
 ;; Main route table.
 (defroutes routes
-  (GET ["/"] {} "MOTD: <a href='http://www.nyan.cat/dub.php'>Nyan Cat Tabbyspire!</a>")
+  (GET ["/"] {} app/show-landing)
   (context "/tabspire/api/0" []
            (GET ["/:channel-name/:cmd",
                  :channel-name , allowed-channel-name-regex
