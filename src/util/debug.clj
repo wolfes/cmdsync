@@ -1,5 +1,4 @@
-(ns util.debug
-  (:gen-class))
+(ns util.debug)
 
 ; Utility methods for debugging.
 

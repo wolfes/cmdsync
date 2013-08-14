@@ -1,5 +1,6 @@
-(ns cmdsync.handler
+(ns cmdsync.handlers.api
   (:use [org.httpkit.server :only [run-server with-channel websocket? open? send! on-receive on-close]]
+        [clojure.repl :only [doc source]]
         [compojure.handler :only [site]]
         [compojure.core :only [defroutes GET POST]]
         [lamina.core :only [siphon channel? enqueue]]
@@ -16,9 +17,10 @@
   (:require [ring.middleware.reload :as reload]
             [compojure.route :as route]
             [clojure.data.json :as json]
+            ;; [cmdsync.tmpls :as tmpl]
             [channel.private :as channel-private]))
 
-; Helper Route Handlers
+;; Helper API Route Handlers
 
 (defn process-existing-private-channel [ch channel-name]
   "Overwrite existing private channel for channel-name, grand theft channel style."
@@ -64,7 +66,8 @@
     {:status 200 :headers {"content-type" "text/html"}
      :body tabspire-command}))
 
-; Direct Route Handlers
+
+;; Primary API Route Handlers
 
 (defmulti route-tabspire-api-post
   "Route POST request to Tabspire API to the appropriate handler."
@@ -103,29 +106,3 @@
       (print-route-tabspire-cmd (websocket? req-channel) channel-name cmd req)
       (if (websocket? req-channel)
         (process-websocket-request req req-channel channel-name cmd)))))
-
-(def allowed-channel-name-regex #"[\:\_\-a-zA-Z0-9]+")
-
-(defroutes app-routes
-  (GET ["/"] {} "MOTD: <a href='http://www.nyan.cat/dub.php'>Nyan Cat Tabbyspire!</a>")
-  (GET ["/tabspire/api/0/:channel-name/:cmd",
-        :channel-name , allowed-channel-name-regex
-        :cmd allowed-channel-name-regex] {}
-       route-tabspire-cmd)
-  (POST ["/tabspire/api/0/:channel-name/:cmd"
-         :channel-name allowed-channel-name-regex
-         :cmd allowed-channel-name-regex] {}
-        route-tabspire-api-post)
-  (route/resources "/")
-  (route/not-found "Not Found"))
-
-(defn in-dev? [args] 
-  "TODO: Implement before creating production version."
-  true)
-
-(defn -main [& args]
-  (let [handler (if (in-dev? args)
-                  (reload/wrap-reload (site #'app-routes)) ; Hot reload dev server.
-                  (site app-routes))]
-    (run-server handler {:port 3000})))
-
