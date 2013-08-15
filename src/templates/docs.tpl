@@ -17,8 +17,8 @@
           <a class="brand" href="#">{{sanitized-ns}}</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="/">Home</a></li>
-              <li><a href="/tabspire/docs">Tabspire Documentation</a></li>
+              <li><a href="/">Home</a></li>
+              <li class="active"><a href="/tabspire/docs">Tabspire Documentation</a></li>
               <li><a href="#about">About</a></li>
               <li><a href="#contact">Contact</a></li>
             </ul>
@@ -29,7 +29,7 @@
 
     <div class="container">
 
-      <h1>Sync All The Things!</h1>
+      <h1>Tabspire Documentation</h1>
 
       <p>Your user agent is : {{ user-agent }}</p>
 

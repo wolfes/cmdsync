@@ -1,5 +1,6 @@
 (ns cmdsync.handlers.api
-  (:use [org.httpkit.server :only [run-server with-channel websocket? open? send! on-receive on-close]]
+  (:use [org.httpkit.server :only
+         [run-server with-channel websocket? open? send! on-receive on-close]]
         [clojure.repl :only [doc source]]
         [compojure.handler :only [site]]
         [compojure.core :only [defroutes GET POST]]

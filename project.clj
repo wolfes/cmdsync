@@ -8,6 +8,7 @@
                  [org.clojure/data.json "0.2.2"]
                  [org.clojure/tools.logging "0.2.6"]
                  ;; Template: Still undecided vs Enlive & others.
+                 [enlive "1.1.1"]
                  [me.shenfeng/mustache "1.1"]
                  ;; [net.cgrand.enlive-html "???"]
                  ;; Awesome channels library.

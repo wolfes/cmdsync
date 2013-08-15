@@ -14,7 +14,10 @@
 
 ;; Main route table.
 (defroutes routes
-  (GET ["/"] {} app/show-landing)
+  ;(GET ["/"] {} app/show-landing)
+  (GET ["/"] {} app/show-enlive-landing)
+  (GET ["/foo"] {} app/show-enlive-landing)
+  (GET ["/tabspire/docs"] {} app/show-tabspire-docs)
   (context "/tabspire/api/0" []
            (GET ["/:channel-name/:cmd",
                  :channel-name , allowed-channel-name-regex

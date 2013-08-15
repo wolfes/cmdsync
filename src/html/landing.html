@@ -3,18 +3,22 @@
   <!-- http://mustache.github.com/mustache.5.html -->
   <head>
     <!-- partial is just like copy and paste the template here -->
-    {{>partials/header}}
+    <title> Enlive </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/static/css/style.css" rel="stylesheet"/>
+    <link href="/static/css/bootstrap.css" rel="stylesheet"/>
+    <link href="/static/css/bootstrap-responsive.css" rel="stylesheet"/>
   </head>
   <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
           <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
+            <!--<span class="icon-bar"></span>-->
+            <!--<span class="icon-bar"></span>-->
+            <!--<span class="icon-bar"></span>-->
           </button>
-          <a class="brand" href="#">{{sanitized-ns}}</a>
+          <!--<a class="brand" href="#">{{sanitized-ns}}</a>-->
           <div class="nav-collapse collapse">
             <ul class="nav">
               <li class="active"><a href="/">Home</a></li>
@@ -31,15 +35,15 @@
 
       <h1>Sync All The Things!</h1>
 
-      <p>Your user agent is : {{ user-agent }}</p>
+      <!--<p>Your user agent is : {{ user-agent }}</p>-->
 
       <h3>Todo:</h3>
       <ul>
-        {{#list}}
-          <li>{{ . }}</li>
-        {{/list}}
+        <!--{{#list}}-->
+          <!--<li>{{ . }}</li>-->
+        <!--{{/list}}-->
       </ul>
-      <a href="{{funny-url}}">{{funny-url-name}}</a>
+      <!--<a href="{{funny-url}}">{{funny-url-name}}</a>-->
 
     </div>
     <script src="/static/js/lib/jquery-1.9.1.js"></script>
