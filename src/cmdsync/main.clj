@@ -15,6 +15,7 @@
   ;; Stop previously running server to run -main from repl.
   (when-not (nil? @server) (@server))
   ;; Add database connection.
+  ;; Init db/redis/memcache/etc...
   (reset! server (run-server (app-routes) {:port (cfg :port)
                                            :thread (cfg :thread)})))
 

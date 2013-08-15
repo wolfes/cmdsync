@@ -1,4 +1,4 @@
-(ns cmdsync.test.handler
+(ns cmdsync.test.private
   (:use clojure.test
         ring.mock.request  
         channel.private)
