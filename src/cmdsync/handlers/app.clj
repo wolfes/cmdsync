@@ -36,20 +36,20 @@
   [:title] (content "CmdSync")
   ;; Where we find dom elt with id navbar, replace content with snippet.
   [:#navbar] (content (nav-bar-snip))
-  [:#main-nav-links (nth-child 1)] (set-attr :class "active"))
+  [:#main-nav-links (nth-child 0)] (set-attr :class "active"))
 
 (deftemplate tabspire-docs-template "html/landing.html"
   []
   [:title] (content "Tabspire")
   [:#navbar] (content (nav-bar-snip))
-  [:#main-nav-links (nth-child 2)] (set-attr :class "active")
+  [:#main-nav-links (nth-child 1)] (set-attr :class "active")
   [:#main-content] (content (docs-tabspire)))
 
 (deftemplate vimspire-docs-template "html/landing.html"
   []
   [:title] (content "Vimspire")
   [:#navbar] (content (nav-bar-snip))
-  [:#main-nav-links (nth-child 3)] (set-attr :class "active")
+  [:#main-nav-links (nth-child 2)] (set-attr :class "active")
   [:#main-content] (content (docs-vimspire)))
 
 (defn show-enlive-landing [req]
