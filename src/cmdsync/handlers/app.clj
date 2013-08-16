@@ -9,9 +9,9 @@
 
 (def header-buttons
   [{:text "Tabspire" :href "/tabspire/docs"}
-   {:text "Vimspire" :href "/vimspire/docs"}
-   {:text "About" :href "/about/docs"}
-   {:text "Contact" :href "/contact/docs"}])
+   {:text "Vimspire" :href "/vimspire/docs"}])
+   ;{:text "About" :href "/about/docs"}
+   ;{:text "Contact" :href "/contact/docs"}])
 
 ;; Snippet for nav-bar
 ;; name snipper-html-source selector-gets-only-part-of-source-html
