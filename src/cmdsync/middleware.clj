@@ -35,6 +35,7 @@
   (if (= (conf/cfg :profile) :dev)
     (fn [req]
       (require :reload 'cmdsync.tmpls) ; reload templates
+      (require :reload 'cmdsync.handlers.app) ; Reload Enlive deftemplates.
       (handler req))
     handler))
 
