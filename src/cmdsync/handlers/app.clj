@@ -1,17 +1,30 @@
 (ns cmdsync.handlers.app
   (:use [net.cgrand.enlive-html
-         :only [deftemplate defsnippet content clone-for
+         :only [deftemplate defsnippet content clone-for nth-child
                 nth-of-type first-child do-> set-attr sniptest at emit*]])
   (:require [cmdsync.tmpls :as tmpl]))
 
 
 ;; Enlive
 
+(def header-buttons
+  [{:text "Tabspire" :href "/tabspire/docs"}
+   {:text "Vimspire" :href "/vimspire/docs"}
+   {:text "About" :href "/about/docs"}
+   {:text "Contact" :href "/contact/docs"}])
+
 ;; Snippet for nav-bar
 ;; name snipper-html-source selector-gets-only-part-of-source-html
 (defsnippet nav-bar-snip "html/nav-bar.html" [:#navbar-inner]
-  [])
- 
+  []
+
+  [:#main-nav-links :li]
+  (clone-for [btn header-buttons]
+             [:a]
+             (do-> (content (:text btn))
+                   (set-attr :href (str (:href btn)))))
+  )
+
 (defsnippet docs-tabspire "html/tabspire-readme.html" [:body]
   [])
 
@@ -20,18 +33,23 @@
 
 (deftemplate landing-template "html/landing.html"
   []
-  [:title] (content "2")
+  [:title] (content "CmdSync")
   ;; Where we find dom elt with id navbar, replace content with snippet.
-  [:#navbar] (content (nav-bar-snip)))
+  [:#navbar] (content (nav-bar-snip))
+  [:#main-nav-links (nth-child 1)] (set-attr :class "active"))
 
 (deftemplate tabspire-docs-template "html/landing.html"
   []
+  [:title] (content "Tabspire")
   [:#navbar] (content (nav-bar-snip))
+  [:#main-nav-links (nth-child 2)] (set-attr :class "active")
   [:#main-content] (content (docs-tabspire)))
 
 (deftemplate vimspire-docs-template "html/landing.html"
   []
+  [:title] (content "Vimspire")
   [:#navbar] (content (nav-bar-snip))
+  [:#main-nav-links (nth-child 3)] (set-attr :class "active")
   [:#main-content] (content (docs-vimspire)))
 
 (defn show-enlive-landing [req]
