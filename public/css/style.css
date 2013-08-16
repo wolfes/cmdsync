@@ -5,4 +5,17 @@ html {
 body {
     padding-top: 60px;
 /* padding-top: 60px; /\* 60px to make the container go all the way to the bottom of the topbar *\/ */
+
+    background: url('/static/img/glow-cat.jpg') center no-repeat fixed;
+    background-size: 100% 100%;
+    /*-khtml-opacity: 0.30;*/
+    /*-moz-opacity: 0.30;*/
+    /*-ms-filter: "alpha(opacity=30)";*/
+    /*filter: alpha(opacity=30);*/
+    /*filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0.3);*/
+    /*opacity: 0.3;*/
+}
+
+body > div {
+  background-color: rgba(255,255,255, 0.8);
 }
