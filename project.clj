@@ -8,6 +8,7 @@
                  [org.clojure/data.json "0.2.2"]
                  [org.clojure/tools.logging "0.2.6"]
                  ;; Template: Still undecided vs Enlive & others.
+                 [me.raynes/laser "1.1.1"]
                  [enlive "1.1.1"]
                  [me.shenfeng/mustache "1.1"]
                  ;; [net.cgrand.enlive-html "???"]
@@ -23,4 +24,5 @@
                  ; :prompt (fn [ns] (str ns "=>"))
                  ; Specify the ns to start the REPL in (override :main).
                  ; :init-ns cmdsync.handler
-                 :init (use '[clojure.repl :only [doc find-doc source]])})
+                 :init (use '[clojure.repl :only [doc find-doc source]]
+                              '[clojure.pprint :as pp])})

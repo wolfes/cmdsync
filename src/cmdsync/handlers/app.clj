@@ -5,10 +5,6 @@
   (:require [cmdsync.tmpls :as tmpl]
             [cmdsync.snips :as snip]))
 
-;; Enlive
-
-
-
 (defn show-enlive-landing [req]
   {:body (tmpl/landing)
    :status 200})

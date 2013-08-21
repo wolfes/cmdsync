@@ -1,10 +1,11 @@
 (ns cmdsync.tmpls
   (:use [cmdsync.config :only [cfg]]
         [net.cgrand.enlive-html
-         :only [deftemplate defsnippet content clone-for nth-child
+         :only [deftemplate defsnippet content substitute clone-for nth-child
                 nth-of-type first-child do-> set-attr sniptest at emit*]]
         [me.shenfeng.mustache :only [gen-tmpls-from-resources]])
-  (:require [cmdsync.snips :as snip]))
+  (:require [cmdsync.snips :as snip]
+            [me.raynes.laser :as l]))
 
 ;; Enlive Templates.
 
@@ -12,21 +13,19 @@
   []
   [:title] (content "CmdSync")
   ;; Where we find dom elt with id navbar, replace content with snippet.
-  [:#navbar] (content (snip/nav-bar-snip))
-  [:#main-nav-links (nth-child 0)] (set-attr :class "active"))
+  [:#navbar] (content (snip/nav-bar {:current-link-idx 0}))
+  [:#main-content] (content (snip/home-main-content)))
 
 (deftemplate tabspire-docs "tmpls/landing.html"
   []
   [:title] (content "Tabspire")
-  [:#navbar] (content (snip/nav-bar-snip))
-  [:#main-nav-links (nth-child 1)] (set-attr :class "active")
+  [:#navbar] (content (snip/nav-bar {:current-link-idx 1}))
   [:#main-content] (content (snip/docs-tabspire)))
 
 (deftemplate vimspire-docs "tmpls/landing.html"
   []
   [:title] (content "Vimspire")
-  [:#navbar] (content (snip/nav-bar-snip))
-  [:#main-nav-links (nth-child 2)] (set-attr :class "active")
+  [:#navbar] (content (snip/nav-bar {:current-link-idx 2}))
   [:#main-content] (content (snip/docs-vimspire)))
 
 
@@ -38,4 +37,4 @@
     :prod? (= (cfg :profile) :prod)))
 
 ;; Generate clojure functions from src/templates folder.
-(gen-tmpls-from-resources "templates" [".tpl"] add-info)
+;(gen-tmpls-from-resources "templates" [".tpl"] add-info)

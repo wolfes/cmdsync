@@ -14,11 +14,12 @@
 
 ;; Main route table.
 (defroutes routes
+  ; ms.shenfeng mustache
   ;(GET ["/"] {} app/show-landing)
+  ;(GET ["/tabspire/docs"] {} app/show-tabspire-docs)
   (GET ["/"] {} app/show-enlive-landing)
   (GET ["/tabspire/docs"] {} app/show-docs-tabspire)
   (GET ["/vimspire/docs"] {} app/show-docs-vimspire)
-  ;(GET ["/tabspire/docs"] {} app/show-tabspire-docs)
   (context "/tabspire/api/0" []
            (GET ["/:channel-name/:cmd",
                  :channel-name , allowed-channel-name-regex
@@ -40,10 +41,10 @@
   (let [wrapped-routes (if (= (conf/cfg :profile) :dev)
                          ; Dev
                          (-> #'routes
-                             reload/wrap-reload
                              wrap-request-logging-in-dev
                              wrap-reload-in-dev
                              wrap-failsafe
+                             reload/wrap-reload
                              site)
                          ; Not Dev (ie: Prod)
                          (site routes))] 
