@@ -5,7 +5,17 @@
                 nth-of-type first-child do-> set-attr sniptest at emit*]]
         [me.shenfeng.mustache :only [gen-tmpls-from-resources]])
   (:require [cmdsync.snips :as snip]
-            [me.raynes.laser :as l]))
+            [me.raynes.laser :as l]
+            [clojure.java.io :refer [file]]))
+
+;; Laser by Raynes
+
+(l/defdocument laser-landing (file "src/tmpls/landing.html")
+  []
+  (l/element= "title") (l/content (l/node :title :content "LASER"))
+  (l/id= "navbar") (l/content (snip/laser-nav-bar {}))
+  (l/id= "main-content") (l/content (l/parse-fragment (file "src/snips/main-content.html"))))
+
 
 ;; Enlive Templates.
 

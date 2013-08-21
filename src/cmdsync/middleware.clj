@@ -34,9 +34,9 @@
   [handler]
   (if (= (conf/cfg :profile) :dev)
     (fn [req]
+      (require :reload 'cmdsync.handlers.app) ; Reload Enlive deftemplates.
       (require :reload 'cmdsync.tmpls) ; Reload Enlive Templates.
       (require :reload 'cmdsync.snips) ; Reload Enlive Snippets.
-      (require :reload 'cmdsync.handlers.app) ; Reload Enlive deftemplates.
       (handler req))
     handler))
 

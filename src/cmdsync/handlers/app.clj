@@ -6,7 +6,7 @@
             [cmdsync.snips :as snip]))
 
 (defn show-enlive-landing [req]
-  {:body (tmpl/landing)
+  {:body (tmpl/laser-landing)
    :status 200})
 
 (defn show-docs-tabspire [req]

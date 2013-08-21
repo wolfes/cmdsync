@@ -1,3 +1,4 @@
+<div>
 <h1>Sync All The Things!</h1>
 
 <div class="hero-unit">
@@ -19,6 +20,8 @@
   <p> Vimspire, a vim plugin, lets you control your Chrome browser through Tabspire.</p>
 
   <p> More info coming soon! </p>
+</div>
+
 </div>
 
 <!--<p>Your user agent is : {{ user-agent }}</p>-->
