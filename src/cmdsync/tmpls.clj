@@ -12,7 +12,7 @@
 
 (l/defdocument laser-landing (file "src/tmpls/landing.html")
   []
-  (l/element= "title") (l/content (l/node :title :content "LASER"))
+  (l/element= "title") (l/content "LASER")
   (l/id= "navbar") (l/content (snip/laser-nav-bar {}))
   (l/id= "main-content") (l/content (l/parse-fragment (file "src/snips/main-content.html"))))
 
