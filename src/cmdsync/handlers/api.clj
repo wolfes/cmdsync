@@ -9,6 +9,7 @@
          [private-channel-with-name?
           get-private-channel-by-name 
           set-private-channel-by-name
+          remove-private-channel-by-name
           send-msg-to-private-channel]]
          [channel.group :only
           [join-group-channel-by-name
@@ -103,7 +104,10 @@
   (let [params (:route-params req)
         {:keys [channel-name cmd]} params]
     (with-channel req req-channel
-      (on-close req-channel (fn [status] (println "Channel Closed:" status)))
+      (on-close req-channel (fn [status]
+                              (println "Removing Closed Private Channel:"
+                                       channel-name "with status:" status)
+                              (remove-private-channel-by-name channel-name)))
       (print-route-tabspire-cmd (websocket? req-channel) channel-name cmd req)
       (if (websocket? req-channel)
         (process-websocket-request req req-channel channel-name cmd)))))

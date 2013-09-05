@@ -25,6 +25,13 @@
                     (keyword channel-name)
                     {:channel channel})))))
 
+(defn remove-private-channel-by-name [channel-name]
+  "Removes private (httpkit) channel with channel-name."
+  (dosync
+    (swap! private-channels
+           (fn [priv-channels]
+             (dissoc priv-channels (keyword channel-name))))))
+
 (defn send-msg-to-private-channel [private-channel msg]
     (when (open? private-channel)
       (send! private-channel msg)))
