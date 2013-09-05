@@ -21,8 +21,9 @@
   (dosync
     (swap! private-channels
            (fn [priv-channels]
-             (conj priv-channels
-                   [(keyword channel-name) {:channel channel}])))))
+             (assoc priv-channels
+                    (keyword channel-name)
+                    {:channel channel})))))
 
 (defn send-msg-to-private-channel [private-channel msg]
     (when (open? private-channel)

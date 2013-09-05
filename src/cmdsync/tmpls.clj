@@ -14,7 +14,10 @@
   []
   (l/element= "title") (l/content "LASER")
   (l/id= "navbar") (l/content (snip/laser-nav-bar {}))
-  (l/id= "main-content") (l/content (l/parse-fragment (file "src/snips/main-content.html"))))
+
+  (l/id= "main-content")
+  ;(l/content (l/fragment (l/parse-fragment (file "src/snips/main-content.tpl")))))
+  (l/content (snip/laser-main-content {})))
 
 
 ;; Enlive Templates.

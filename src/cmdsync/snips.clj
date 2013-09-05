@@ -11,6 +11,7 @@
    {:text "Vimspire" :href "/vimspire/docs"}])
 
 ;; Laser Fragments.
+;; Note: defragment must contain 1+ selector/transform.
 
 ; Node example matching "#main-nav-links :li"
 ;{
@@ -23,8 +24,7 @@
             ;:tag :a,
             ;:content [The Restaurant at the End of the World]}]}
 
-
-(l/defragment laser-nav-bar (file "src/snips/nav-bar.html")
+(l/defragment laser-nav-bar (file "src/snips/nav-bar.tpl")
   [ctx]
 
   (l/child-of
@@ -45,8 +45,11 @@
           ;(assoc-in [:content 0 :content] [(:text btn)]))
       ;)))
 
-;(l/defragment laser-main-content (file "src/snips/main-content.html")
-  ;[ctx])
+(l/defragment laser-main-content (file "src/snips/main-content.tpl")
+  [ctx]
+
+  (l/id= "main-content-container")
+  (l/insert (l/fragment (l/parse-fragment (file "src/snips/project-section.tpl"))) :right))
 
 ;; Enlive Snippets.
 
@@ -64,7 +67,7 @@
   )
 
 
-(defsnippet home-main-content  "snips/main-content.html" [:body]
+(defsnippet home-main-content  "snips/main-content.tpl" [:body]
   [])
 
 (defsnippet docs-tabspire "html/tabspire-readme.html" [:body]
