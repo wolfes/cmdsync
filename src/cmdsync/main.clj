@@ -33,3 +33,9 @@
     (swap! app-configs merge options)
     (start-server)
     (info (str "Server started.  Listen on 0.0.0.0@" (cfg :port)))))
+
+(defn start-server-from-repl
+  "Start server when running from repl in dev env."
+  [& args]
+  (if (= :dev (cfg :profile))
+    (apply -main args)))

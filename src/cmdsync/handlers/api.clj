@@ -32,7 +32,7 @@
 
 (defn process-new-private-channel [ch channel-name]
   "Store a new private channel by name."
-  (println "process-new-private-channel")
+  (println "process-new-private-channel:" channel-name ch)
   (set-private-channel-by-name channel-name ch))
 
 (defmulti process-websocket-request
@@ -74,13 +74,14 @@
 (defmulti route-tabspire-api-post
   "Route POST request to Tabspire API to the appropriate handler."
   (fn [req]
-    "Returns request param's channel-type if available, else :private."
+    ; Returns request param's channel-type if available, else :private.
     (keyword (get (:form-params req) "channel-type" :private))))
 
 (defmethod route-tabspire-api-post :private [req]
   "Process tabspire api request for a private channel."
   (let [channel-name (-> req :route-params :channel-name)
         target-channel (get-private-channel-by-name channel-name)]
+    (println "private")
     (process-api-request-to-channel req (partial send-msg-to-private-channel target-channel))))
 
 (defmethod route-tabspire-api-post :group [req]

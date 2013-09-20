@@ -7,6 +7,8 @@
                  [org.clojure/tools.cli "0.2.2"]
                  [org.clojure/data.json "0.2.2"]
                  [org.clojure/tools.logging "0.2.6"]
+                 ;; Experimental Libs
+                 [metrics-clojure "1.0.1"]
                  ;; Template: Still undecided vs Enlive & others.
                  [me.raynes/laser "1.1.1"]
                  [enlive "1.1.1"]
@@ -23,6 +25,8 @@
   :repl-options {;; Specify the string to print when prompting for input.
                  ; :prompt (fn [ns] (str ns "=>"))
                  ; Specify the ns to start the REPL in (override :main).
-                 ; :init-ns cmdsync.handler
-                 :init (use '[clojure.repl :only [doc find-doc source]]
-                              '[clojure.pprint :as pp])})
+                 ; :init-ns cmdsync.main
+                 :init (do
+                         (use '[clojure.repl :only [doc find-doc source]]
+                              '[clojure.pprint :as pp])
+                        (cmdsync.main/start-server-from-repl))})
