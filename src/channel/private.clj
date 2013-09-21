@@ -1,6 +1,7 @@
 (ns channel.private
   (:use [org.httpkit.server :only [open? send!]]
-        [lamina.core :only [siphon]]))
+        [lamina.core :only [siphon]])
+  (:require [clojure.data.json :as json]))
 
 ; Private channel bookkeeping methods.
 ; Enforces one client per unique channel name.
@@ -41,3 +42,9 @@
   (println "send-msg-to-private-channel" private-channel msg)
   (when (open? private-channel)
     (send! private-channel msg)))
+
+(defn send-msg-to-private-channel-by-name [private-channel-name msg]
+  "Json encode message and send to private channel by name."
+  (when-let [private-channel (get-private-channel-by-name private-channel-name)]
+    (when (open? private-channel)
+      (send! private-channel (json/write-str msg)))))

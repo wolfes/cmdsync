@@ -10,7 +10,8 @@
           get-private-channel-by-name 
           set-private-channel-by-name
           remove-private-channel-by-name
-          send-msg-to-private-channel]]
+          send-msg-to-private-channel
+          send-msg-to-private-channel-by-name]]
          [channel.group :only
           [join-group-channel-by-name
            get-group-channel-by-name
@@ -98,6 +99,21 @@
              "-- Cmd:" cmd
              "-- Remote Addr:" (:remote-addr req)))
 
+(defmulti tabspire-receiver
+  "Handle tabspire websocket channel messages."
+  (fn [req-channel msg]
+    (keyword (get msg "cmd"))))
+
+(defmethod tabspire-receiver :heartbeat [req-channel msg]
+  "Handle tabspire heartbeat."
+  (let [channel-name (get msg "channel-name")
+        channel-alive (private-channel-with-name? channel-name)]
+    (println "Return heartbeat, channel" channel-name "alive:" channel-alive)
+    (send! req-channel 
+           (json/write-str 
+             {:command "heartbeat-response"
+              :command-data {:alive channel-alive}}))))
+
 (defn route-tabspire-cmd 
   "Process websocket connection/naming."
   [req]
@@ -105,6 +121,10 @@
   (let [params (:route-params req)
         {:keys [channel-name cmd]} params]
     (with-channel req req-channel
+      (on-receive req-channel (fn [msg] 
+                                (tabspire-receiver
+                                  req-channel
+                                  (json/read-str msg))))
       (on-close req-channel (fn [status]
                               (println "Removing Closed Private Channel:"
                                        channel-name "with status:" status)

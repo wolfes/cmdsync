@@ -29,4 +29,5 @@
                  :init (do
                          (use '[clojure.repl :only [doc find-doc source]]
                               '[clojure.pprint :as pp])
-                        (cmdsync.main/start-server-from-repl))})
+                         (require '[clojure.data.json :as json])
+                         (cmdsync.main/start-server-from-repl))})
