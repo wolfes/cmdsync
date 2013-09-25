@@ -1,6 +1,7 @@
 (ns channel.group
   (:use [org.httpkit.server :only [open? send! on-receive on-close]]
-        [lamina.core :only [channel channel? receive-all enqueue]]))
+        [lamina.core :only [channel channel? receive-all enqueue]])
+  (:require [clojure.data.json :as json]))
 
 ; Group channel bookkeeping methods.
 ; Allows multiple clients to listen to a unique channel name.
@@ -36,5 +37,11 @@
     (receive-all group-channel (fn [data] (send! req-channel data)))))
 
 (defn send-msg-to-group-channel [group-channel msg]
-    (when (channel? group-channel)
-      (enqueue group-channel msg)))
+  (when (channel? group-channel)
+    (enqueue group-channel msg)))
+
+; TODO: Replace usage of above method with this.
+(defn send-group-msg-by-name [group-name msg]
+  "Jsonify and send msg to group with group-name."
+  (when-let [group-channel (get-group-channel-by-name group-name)]
+    (send-msg-to-group-channel group-channel (json/write-str msg))))

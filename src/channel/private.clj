@@ -9,15 +9,16 @@
 ; Map private-channel-name to private channel info.
 (def private-channels (atom {}))
 
-(defn private-channel-with-name? [channel-name]
-  "Returns boolean for existance of private channel with channel-name."
-  (println "private-channel-with-name?" channel-name)
-  (contains? @private-channels (keyword channel-name)))
-
 (defn get-private-channel-by-name [channel-name]
   "Returns private channel for channel-name if one exists, else nil."
   (println "get-private-channel-by-name" channel-name)
   (-> @private-channels ((keyword channel-name)) :channel))
+
+(defn private-channel-with-name? [channel-name]
+  "Returns boolean for existance of open private channel with channel-name."
+  (println "private-channel-with-name?" channel-name)
+  (when-let [private-channel (get-private-channel-by-name channel-name)]
+    (open? private-channel)))
 
 (defn get-private-channels []
   private-channels)
@@ -39,6 +40,7 @@
              (dissoc priv-channels (keyword channel-name)))))
 
 (defn send-msg-to-private-channel [private-channel msg]
+  "Send json encoded message to private channel."
   (println "send-msg-to-private-channel" private-channel msg)
   (when (open? private-channel)
     (send! private-channel msg)))
